@@ -262,7 +262,7 @@ export default function App() {
   // --- WELCOME SCREEN RENDER ---
   if (showWelcome) {
     return (
-      <div className="fixed inset-0 z-50 bg-gray-900 flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+      <div className="fixed inset-0 z-50 bg-gray-900 flex flex-col items-center justify-center p-4 text-center overflow-hidden overscroll-none">
         {/* Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-soccer-900 opacity-90 z-0"></div>
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d6428?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay opacity-20 z-0"></div>
@@ -307,10 +307,10 @@ export default function App() {
 
   // --- MAIN APP RENDER ---
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-gray-100 font-sans relative">
+    <div className="flex flex-col h-screen bg-gray-900 text-gray-100 font-sans relative overscroll-none select-none">
       {/* Notification Toast */}
       {notification && (
-          <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-2xl border animate-in slide-in-from-top-2 duration-300 ${
+          <div className={`fixed top-14 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-2xl border animate-in slide-in-from-top-2 duration-300 ${
               notification.type === 'success' 
               ? 'bg-green-900/90 border-green-500 text-green-100' 
               : 'bg-red-900/90 border-red-500 text-red-100'
@@ -321,8 +321,8 @@ export default function App() {
           </div>
       )}
 
-      {/* Header */}
-      <header className="bg-soccer-900 p-3 md:p-4 shadow-lg border-b border-soccer-800 sticky top-0 z-20 flex justify-between items-center gap-2">
+      {/* Header with Safe Area Top */}
+      <header className="bg-soccer-900 p-3 md:p-4 pt-[max(12px,env(safe-area-inset-top))] shadow-lg border-b border-soccer-800 sticky top-0 z-20 flex justify-between items-center gap-2">
         {/* Empty div for layout balance on large screens, hidden on small */}
         <div className="hidden md:block w-32"></div>
         
@@ -354,21 +354,21 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto overscroll-y-contain">
         {/* Banner for View Mode */}
         {!isAdmin && (
             <div className="bg-blue-900/30 text-blue-200 text-[10px] md:text-xs text-center py-1 border-b border-blue-900/50 uppercase tracking-wider font-semibold">
                 Modo Visitante (Apenas Visualização)
             </div>
         )}
-        <div className="max-w-5xl mx-auto w-full">
+        <div className="max-w-5xl mx-auto w-full pb-4">
             {renderContent()}
         </div>
       </main>
 
       {/* Login Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
             <div className="bg-gray-800 rounded-xl border border-gray-600 p-6 w-full max-w-sm shadow-2xl animate-in fade-in zoom-in duration-200">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2"><LogIn /> Área Restrita</h3>
@@ -387,7 +387,7 @@ export default function App() {
                         />
                         {loginError && <p className="text-red-400 text-sm mt-2 font-bold bg-red-900/20 p-2 rounded border border-red-900/50">{loginError}</p>}
                     </div>
-                    <button type="submit" className="w-full bg-soccer-600 hover:bg-soccer-500 text-white font-bold py-3 rounded-lg transition-colors shadow-lg">
+                    <button type="submit" className="w-full bg-soccer-600 hover:bg-soccer-500 text-white font-bold py-3 rounded-lg transition-colors shadow-lg active:scale-95 transform">
                         ACESSAR SISTEMA
                     </button>
                 </form>
@@ -397,7 +397,7 @@ export default function App() {
 
       {/* Finish Tournament Confirmation Modal */}
       {showFinishModal && (
-        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
             <div className="bg-gray-800 rounded-xl border border-gray-600 p-6 w-full max-w-md shadow-2xl animate-in fade-in zoom-in duration-200">
                 <div className="flex flex-col items-center text-center mb-6">
                     <div className="bg-yellow-500/10 p-4 rounded-full mb-4">
@@ -414,13 +414,13 @@ export default function App() {
                 <div className="flex gap-3">
                     <button 
                         onClick={() => setShowFinishModal(false)} 
-                        className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors"
+                        className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors active:scale-95 transform"
                     >
                         Cancelar
                     </button>
                     <button 
                         onClick={handleConfirmFinish} 
-                        className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg transition-colors shadow-lg flex items-center justify-center gap-2"
+                        className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg transition-colors shadow-lg flex items-center justify-center gap-2 active:scale-95 transform"
                     >
                         <CheckCircle size={20} /> Finalizar Torneio
                     </button>
@@ -429,8 +429,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Mobile-first Tab Bar */}
-      <nav className="bg-gray-800 border-t border-gray-700 sticky bottom-0 z-20 w-full overflow-x-auto">
+      {/* Mobile-first Tab Bar with Safe Area Bottom */}
+      <nav className="bg-gray-800 border-t border-gray-700 sticky bottom-0 z-20 w-full overflow-x-auto pb-[env(safe-area-inset-bottom)]">
         <div className="flex justify-between items-center max-w-5xl mx-auto min-w-[350px]">
           <TabButton icon={<Users />} label="Jogadores" isActive={activeTab === 'players'} onClick={() => setActiveTab('players')} />
           <TabButton icon={<Shield />} label="Times" isActive={activeTab === 'teams'} onClick={() => setActiveTab('teams')} />
@@ -447,7 +447,7 @@ export default function App() {
 const TabButton: React.FC<{ icon: React.ReactNode, label: string, isActive: boolean, onClick: () => void }> = ({ icon, label, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex flex-col items-center justify-center py-3 px-2 w-full min-w-[60px] transition-colors duration-200 ${
+    className={`flex flex-col items-center justify-center py-3 px-2 w-full min-w-[60px] transition-colors duration-200 active:bg-gray-700 ${
       isActive ? 'text-soccer-500 bg-gray-800' : 'text-gray-500 hover:text-gray-300'
     }`}
   >
